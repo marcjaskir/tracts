@@ -44,27 +44,28 @@ for sub_dir in ${SUBJECTS_DIR}/sub-*; do
                 ${output_dir}/${sub}/${sub}_desc-preproc_T1w.nii.gz \
                 ${output_dir}/${sub}/${sub}_desc-preproc_T1w.mgz
 
-    # Compute transformation from QSIPrep preprocessed T1w image to Freesurfer-derived nu.mgz image
-    tkregister2 --mov ${output_dir}/${sub}/${sub}_desc-preproc_T1w.mgz \
-               --targ ${output_dir}/${sub}/nu.mgz \
-               --reg ${output_dir}/${sub}/desc-preproc_T1w-in-nu.dat \
+    # Compute transformation from Freesurfer-derived nu.mgz image to QSIPrep preprocessed T1w image
+    tkregister2 --mov ${output_dir}/${sub}/nu.mgz \
+               --targ ${output_dir}/${sub}/${sub}_desc-preproc_T1w.mgz \
+               --reg ${output_dir}/${sub}/nu_in_desc-preproc_T1w.dat \
                --s ${sub} \
-               --regheader
+               --regheader \
 
-    # Use bbregister to apply transformation to QSIPrep preprocessed T1w image
-    bbregister --s ${sub} \
-               --mov ${output_dir}/${sub}/${sub}_desc-preproc_T1w.mgz \
-               --reg ${output_dir}/${sub}/desc-preproc_T1w-in-nu.dat \
-               --t1 \
-               --o ${output_dir}/${sub}/desc-preproc_T1w-in-nu.mgz
+    # Transform the surfaces
+    mri_surf2surf --sval-xyz pial \
+                --reg ${output_dir}/${sub}/nu_in_desc-preproc_T1w.dat ${output_dir}/${sub}/${sub}_desc-preproc_T1w.mgz \
+                --tval ${output_dir}/${sub}/lh.pial.native \
+                --tval-xyz ${output_dir}/${sub}/${sub}_desc-preproc_T1w.mgz \
+                --hemi lh \
+                --s ${sub}
 
     # Map the bundle volumes to Freesurfer surfaces in native space by appling transformation
-    test_bundle_name=ArcuateFasciculusL
-    test_bundle_file=${data_dir}/qsirecon/${sub}/ses-V1/dwi/sub-0857566_ses-V1_space-T1w_desc-preproc_bundle-${test_bundle_name}_AutoTrackGQI.mgz
-    mri_vol2surf --src ${test_bundle_file} \
-                --reg ${output_dir}/${sub}/desc-preproc_T1w-in-nu.dat \
-                --regheader ${sub} \
-                --hemi lh \
-                --o ${output_dir}/${sub}/${test_bundle_name}_surf.mgz
+    # test_bundle_name=ArcuateFasciculusL
+    # test_bundle_file=${data_dir}/qsirecon/${sub}/ses-V1/dwi/sub-0857566_ses-V1_space-T1w_desc-preproc_bundle-${test_bundle_name}_AutoTrackGQI.mgz
+    # mri_vol2surf --src ${test_bundle_file} \
+    #             --reg ${output_dir}/${sub}/desc-preproc_T1w-in-nu.dat \
+    #             --regheader ${sub} \
+    #             --hemi lh \
+    #             --o ${output_dir}/${sub}/${test_bundle_name}_surf.mgz
 
 done
