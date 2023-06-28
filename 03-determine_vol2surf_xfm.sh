@@ -22,7 +22,7 @@ for sub_dir in ${SUBJECTS_DIR}/sub-*; do
         mkdir -p ${output_dir}/${sub}
     fi
 
-    # Check for QSIPrep preprocessed T1w image
+    # Check for a QSIPrep preprocessed T1w image
     if [ ! -f ${data_dir}/qsiprep/${sub}/anat/${sub}_desc-preproc_T1w.nii.gz ]; then
         echo "No QSIPrep-preprocessed T1w image for ${sub}"
         continue
@@ -30,7 +30,7 @@ for sub_dir in ${SUBJECTS_DIR}/sub-*; do
         cp ${data_dir}/qsiprep/${sub}/anat/${sub}_desc-preproc_T1w.nii.gz ${output_dir}/${sub}
     fi
 
-    # Check if Freesurfer-derived nu.mgz image exists
+    # Check if a Freesurfer-derived nu.mgz image exists
     if [ ! -f ${sub_dir}/mri/nu.mgz ]; then
         echo "No Freesurfer-preprocessed nu.mgz image for ${sub}"
         continue
@@ -45,18 +45,34 @@ for sub_dir in ${SUBJECTS_DIR}/sub-*; do
                 ${output_dir}/${sub}/${sub}_desc-preproc_T1w.mgz
 
     # Compute transformation from Freesurfer-derived nu.mgz image to QSIPrep preprocessed T1w image
-    tkregister2 --mov ${output_dir}/${sub}/nu.mgz \
-               --targ ${output_dir}/${sub}/${sub}_desc-preproc_T1w.mgz \
-               --reg ${output_dir}/${sub}/nu_in_desc-preproc_T1w.dat \
-               --s ${sub} \
-               --regheader \
+    # tkregister2 --mov ${output_dir}/${sub}/nu.mgz \
+    #            --targ ${output_dir}/${sub}/${sub}_desc-preproc_T1w.mgz \
+    #            --reg ${output_dir}/${sub}/nu_in_desc-preproc_T1w.dat \
+    #            --s ${sub}
+    mri_robust_register --mov ${output_dir}/${sub}/nu.mgz \
+                        --dst ${output_dir}/${sub}/${sub}_desc-preproc_T1w.mgz \
+                        --lta ${output_dir}/${sub}/nu_in_desc-preproc_T1w.lta \
+                        --mapmov ${output_dir}/${sub}/nu_in_desc-preproc_T1w.mgz \
+                        --satit \
+                        --maxit 20 \
+                        --iscale
 
-    # Transform the surfaces
-    mri_surf2surf --sval-xyz pial \
-                --reg ${output_dir}/${sub}/nu_in_desc-preproc_T1w.dat ${output_dir}/${sub}/${sub}_desc-preproc_T1w.mgz \
-                --tval ${output_dir}/${sub}/lh.pial.native \
+    lta_convert --inlta ${output_dir}/${sub}/nu_in_desc-preproc_T1w.lta \
+                --outreg ${output_dir}/${sub}/nu_in_desc-preproc_T1w.dat
+
+    # As a sanity check, transform nu.mgz to QSIPrep preprocessed T1w image
+    mri_vol2vol --mov ${output_dir}/${sub}/nu.mgz \
+                --targ ${output_dir}/${sub}/${sub}_desc-preproc_T1w.mgz \
+                --reg ${output_dir}/${sub}/nu_in_desc-preproc_T1w.dat \
+                --o ${output_dir}/${sub}/nu_in_desc-preproc_T1w.mgz
+                
+
+    # Transform the subject's pial surface to be aligned with the QSIPrep preprocessed T1w image
+    mri_surf2surf --hemi lh \
+                --sval-xyz pial \
                 --tval-xyz ${output_dir}/${sub}/${sub}_desc-preproc_T1w.mgz \
-                --hemi lh \
+                --tval ${output_dir}/${sub}/lh_pial_in_desc_preproc_T1w \
+                --reg ${output_dir}/${sub}/nu_in_desc-preproc_T1w.dat ${output_dir}/${sub}/${sub}_desc-preproc_T1w.mgz \
                 --s ${sub}
 
     # Map the bundle volumes to Freesurfer surfaces in native space by appling transformation
