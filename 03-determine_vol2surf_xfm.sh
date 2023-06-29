@@ -50,8 +50,6 @@ for sub_dir in ${SUBJECTS_DIR}/sub-*; do
     #       -out ${output_dir}/${sub}/nu_in_desc-preproc_T1w.nii.gz \
     #       -omat ${output_dir}/${sub}/nu_in_desc-preproc_T1w.mat
 
-    antsRegistrationSyNQuick.sh -d 3 -f ${output_dir}/${sub}/nu.nii.gz -m ${output_dir}/${sub}/${sub}_desc-preproc_T1w.nii.gz -n 4 -o ${output_dir}/${sub}/nu_in_desc-preproc_T1w_
-
     antsRegistration \
     --collapse-output-transforms 1 \
     --dimensionality 3 \
