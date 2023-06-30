@@ -44,12 +44,7 @@ for sub_dir in ${SUBJECTS_DIR}/sub-*; do
                 ${output_dir}/${sub}/nu.mgz \
                 ${output_dir}/${sub}/nu.nii.gz
 
-    # Compute affine for warping Freesurfer-derived nu.mgz image to QSIPrep preprocessed T1w image
-    # flirt -in ${output_dir}/${sub}/nu.nii.gz \
-    #       -ref ${output_dir}/${sub}/${sub}_desc-preproc_T1w.nii.gz \
-    #       -out ${output_dir}/${sub}/nu_in_desc-preproc_T1w.nii.gz \
-    #       -omat ${output_dir}/${sub}/nu_in_desc-preproc_T1w.mat
-
+    # Run ANTS registration
     antsRegistration \
     --collapse-output-transforms 1 \
     --dimensionality 3 \
@@ -64,6 +59,9 @@ for sub_dir in ${SUBJECTS_DIR}/sub-*; do
     --shrink-factors 8x4x2x1 \
     --write-composite-transform 0
 
+    # Apply inverse transform
+    antsApplyTransforms -d 3 -i ${output_dir}/${sub}/${sub}_desc-preproc_T1w.nii.gz -r ${output_dir}/${sub}/nu.nii.gz -t [${output_dir}/${sub}/nu_in_desc-preproc_T1w_0GenericAffine.mat,1] -o ${output_dir}/${sub}/preproc_to_nu.nii.gz --interpolation BSpline
+
     # Convert affine
     ConvertTransformFile 3 ${output_dir}/${sub}/nu_in_desc-preproc_T1w_0GenericAffine.mat ${output_dir}/${sub}/nu_in_desc-preproc_T1w_0GenericAffine.txt
 
@@ -76,7 +74,7 @@ for sub_dir in ${SUBJECTS_DIR}/sub-*; do
                 -to-world ${output_dir}/${sub}/nu_in_desc-preproc_T1w_0GenericAffine.affine
 
     # Convert pial surface file to a gifti
-    mris_convert ${output_dir}/${sub}/lh.pial ${output_dir}/${sub}/lh.pial.gii
+    mris_convert --to-scanner ${output_dir}/${sub}/lh.pial ${output_dir}/${sub}/lh.pial.gii
 
     # Apply the affine transformation matrix to the pial surface file
     wb_command -surface-apply-affine ${output_dir}/${sub}/lh.pial.gii ${output_dir}/${sub}/nu_in_desc-preproc_T1w_0GenericAffine.affine ${output_dir}/${sub}/lh.pial.native.surf.gii
