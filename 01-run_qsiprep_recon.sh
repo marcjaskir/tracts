@@ -1,7 +1,9 @@
 #!/bin/bash
 
-data_dir=/Users/mjaskir/ngg/rotations/satterthwaite/data/jaskir_tracts
+# Set data directory
+data_dir=/Users/mjaskir/ngg/rotations/satterthwaite/tracts/data
 
+# Run qsiprep recon-all
 qsiprep-docker \
     -i pennbbl/qsiprep:0.18.0alpha0 \
     ${data_dir}/qsiprep \
@@ -13,4 +15,4 @@ qsiprep-docker \
     --omp-nthreads 1 \
     --nthreads 2 \
     --fs-license-file /Users/mjaskir/ngg/software/freesurfer/license.txt \
-    -w /Users/mjaskir/ngg/rotations/satterthwaite/code/logs
+    -w /Users/mjaskir/ngg/rotations/satterthwaite/tracts/code/logs
