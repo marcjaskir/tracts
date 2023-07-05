@@ -1,7 +1,5 @@
 #!/bin/bash
 
-#### NOTE: In progress - resolving commisural fibers
-
 ########################################
 # Set directories
 ########################################
@@ -13,28 +11,47 @@ for sub_dir in ${outputs_root}/sub-*; do
     # Extract subject label
     sub=$(basename ${sub_dir})
 
+    # Create output directory for surface mappings
+    if [ ! -d ${outputs_root}/${sub}/surface_mappings ]; then
+        mkdir -p ${outputs_root}/${sub}/surface_mappings
+    fi
+    outputs_dir=${outputs_root}/${sub}/surface_mappings
+
     ########################################
     # Map tract volumes to surfaces
     ########################################
 
     for tract_file in ${outputs_root}/${sub}/tracts/nifti/*.nii.gz; do
 
-        # Extract tract name
+        # Extract tract label
         tract_fname=$(basename ${tract_file})
+        tract_label=$(echo ${tract_fname} | sed 's/_LAS.nii.gz//g')
 
-        # Extract hemisphere and grab last character of string
-        hemi=$(echo ${tract_fname} | cut -d'_' -f1 | rev | cut -c1 | rev)
+        # Extract last character of tract label
+        hemi=$(echo ${tract_label} | rev | cut -c1 | rev)
 
-        # Check if hemi is not equal to 'L' or 'R'
+        # Check if its a commisural tract
         if [ "${hemi}" != "L" ] && [ "${hemi}" != "R" ]; then
-            echo ${tract_fname}
+            
+            # Map tract to both hemisphere's surface
+            wb_command -volume-to-surface-mapping ${tract_file} ${outputs_root}/${sub}/surfaces/lh.pial.qsiprep.surf.gii ${outputs_dir}/${tract_label}L.shape.gii -trilinear
+            wb_command -volume-to-surface-mapping ${tract_file} ${outputs_root}/${sub}/surfaces/rh.pial.qsiprep.surf.gii ${outputs_dir}/${tract_label}R.shape.gii -trilinear
+
+        else
+
+            # Map tract to the corresponding hemisphere's surface
+            if [ "${hemi}" == "L" ]; then
+                
+                wb_command -volume-to-surface-mapping ${tract_file} ${outputs_root}/${sub}/surfaces/lh.pial.qsiprep.surf.gii ${outputs_dir}/${tract_label}.shape.gii -trilinear
+
+            elif [ "${hemi}" == "R" ]; then
+
+                wb_command -volume-to-surface-mapping ${tract_file} ${outputs_root}/${sub}/surfaces/rh.pial.qsiprep.surf.gii ${outputs_dir}/${tract_label}.shape.gii -trilinear
+
+            fi
+
         fi
 
-        # Map tract to surface
-        #wb_command -volume-to-surface-mapping ${tract_file} ${outputs_root}/${sub}/surfaces/lh.pial.qsiprep.surf.gii ${outputs_root}/${sub}/surfaces/${tract}_LAS.shape.gii -trilinear
-
     done
-
-    # wb_command -volume-to-surface-mapping ${outputs_root}/${sub}/ArcuateFasciculusL_LAS.nii.gz ${output_dir}/${sub}/lh.pial.warped.surf.gii ${output_dir}/${sub}/ArcuateFasciculusL_LAS.shape.gii -trilinear
 
 done
