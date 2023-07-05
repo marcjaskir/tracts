@@ -44,7 +44,7 @@ for sub_dir in ${data_root}/qsirecon/sub-*; do
 		fi
 
 	done
-
+	
 	########################################
     # Convert voxelized tracts to NIFTIs and change orientation to LAS+ (for compatibility with Connectome Workbench)
     ########################################
