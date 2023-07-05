@@ -2,6 +2,9 @@ import os
 from os.path import join as ospj
 from smriprep.interfaces.surf import normalize_surfs
 
+########################################
+# Set directories
+########################################
 outputs_root = '/Users/mjaskir/ngg/rotations/satterthwaite/tracts/outputs'
 
 # Iterate over subject directories with outputs
