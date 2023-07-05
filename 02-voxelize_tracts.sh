@@ -9,43 +9,43 @@ outputs_root=/Users/mjaskir/ngg/rotations/satterthwaite/tracts/outputs
 # Iterate over subjects with qsirecon outputs
 for sub_dir in ${data_root}/qsirecon/sub-*; do
 
-	# Extract subject ID
-	sub=$(basename ${sub_dir})
+    # Extract subject ID
+    sub=$(basename ${sub_dir})
 
     ########################################
     # Check for required files
     ########################################
 
-	# Check if qsirecon tract (.tck) files exist
-	if ! find "${data_root}/qsirecon/${sub}/ses-V1/dwi" -name "*.tck" -print -quit | grep -q .; then
-		echo "No tract (.tck) files for ${sub}"
-		continue
-	fi
+    # Check if qsirecon tract (.tck) files exist
+    if ! find "${data_root}/qsirecon/${sub}/ses-V1/dwi" -name "*.tck" -print -quit | grep -q .; then
+        echo "No tract (.tck) files for ${sub}"
+        continue
+    fi
 
     ########################################
     # Voxelize tracts
     ########################################
 
-	# Create output directory for tracts
+    # Create output directory for tracts
     if [ ! -d ${outputs_root}/${sub}/tracts/freesurfer ]; then
         mkdir -p ${outputs_root}/${sub}/tracts/freesurfer
     fi
-	outputs_dir_fs=${outputs_root}/${sub}/tracts/freesurfer
+    outputs_dir_fs=${outputs_root}/${sub}/tracts/freesurfer
 
-	# Iterate over tract (.tck) files
-	for tract in ${data_root}/qsirecon/${sub}/ses-V1/dwi/*.tck; do
+    # Iterate over tract (.tck) files
+    for tract in ${data_root}/qsirecon/${sub}/ses-V1/dwi/*.tck; do
 
-		# Extract file name (without .tck extension)
-		tract_fname=$(basename ${tract} | sed 's/.tck//g')
+        # Extract file name (without .tck extension)
+        tract_fname=$(basename ${tract} | sed 's/.tck//g')
 
-		# Voxelize tracts
-		if [ ! -f ${outputs_dir_fs}/${tract_fname}.mgz ]; then
-			tckmap ${tract} -template ${data_root}/qsiprep/${sub}/ses-V1/dwi/${sub}_ses-V1_space-T1w_dwiref.nii.gz ${outputs_dir_fs}/${tract_fname}.mgz 
-		fi
+        # Voxelize tracts
+        if [ ! -f ${outputs_dir_fs}/${tract_fname}.mgz ]; then
+            tckmap ${tract} -template ${data_root}/qsiprep/${sub}/ses-V1/dwi/${sub}_ses-V1_space-T1w_dwiref.nii.gz ${outputs_dir_fs}/${tract_fname}.mgz 
+        fi
 
-	done
-	
-	########################################
+    done
+    
+    ########################################
     # Convert voxelized tracts to NIFTIs and change orientation to LAS+ (for compatibility with Connectome Workbench)
     ########################################
 
