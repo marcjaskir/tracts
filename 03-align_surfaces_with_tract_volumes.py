@@ -1,11 +1,14 @@
 import os
+import json
 from os.path import join as ospj
 from smriprep.interfaces.surf import normalize_surfs
 
 ########################################
 # Set directories
 ########################################
-outputs_root = '/Users/mjaskir/ngg/rotations/satterthwaite/tracts/outputs'
+with open('config.json', "rb") as f:
+    config = json.load(f)
+outputs_root = config['outputs_root']
 
 # Iterate over subject directories with outputs
 for sub_dir in [ospj(outputs_root, d) for d in os.listdir(outputs_root) if d.startswith('sub-')]:

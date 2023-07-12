@@ -3,8 +3,8 @@
 ########################################
 # Set directories
 ########################################
-data_root=/Users/mjaskir/ngg/rotations/satterthwaite/tracts/data
-outputs_root=/Users/mjaskir/ngg/rotations/satterthwaite/tracts/outputs
+data_root=$(jq -r '.data_root' config.json)
+outputs_root=$(jq -r '.outputs_root' config.json)
 SUBJECTS_DIR=${data_root}/freesurfer
 
 # Iterate over subjects with voxellized tracts
