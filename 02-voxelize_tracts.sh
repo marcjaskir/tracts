@@ -12,6 +12,10 @@ for sub_dir in ${data_root}/qsirecon/sub-*; do
     # Extract subject ID
     sub=$(basename ${sub_dir})
 
+    if [ ${sub} != 'sub-0857566' ]; then
+        continue
+    fi
+
     ########################################
     # Check for required files
     ########################################
@@ -66,15 +70,14 @@ for sub_dir in ${data_root}/qsirecon/sub-*; do
         mri_convert --in_type mgz \
             --out_type nii \
             ${tract_file} \
-            ${outputs_dir_nifti}/${tract_label}.nii.gz
+            ${outputs_dir_nifti}/${tract_label}_LPS.nii.gz
 
         # Change orientation to LAS+
         mri_convert --in_type nii \
                     --out_type nii \
                     --out_orientation LAS+ \
-                    ${outputs_dir_nifti}/${tract_label}.nii.gz \
+                    ${outputs_dir_nifti}/${tract_label}_LPS.nii.gz \
                     ${outputs_dir_nifti}/${tract_label}_LAS.nii.gz
-        rm ${outputs_dir_nifti}/${tract_label}.nii.gz
 
     done
 
