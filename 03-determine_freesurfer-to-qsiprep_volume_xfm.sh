@@ -13,8 +13,8 @@ for sub_dir in ${outputs_root}/sub-*; do
     # Extract subject label
     sub=$(basename ${sub_dir})
 
-    # Skip subject while debugging
-    if [ ${sub} == "sub-2968080" ]; then
+    # Skip subjects while debugging
+    if [ ${sub} != "sub-0857566" ]; then
         continue
     fi
 
@@ -68,14 +68,30 @@ for sub_dir in ${outputs_root}/sub-*; do
                 ${outputs_dir_xfm}/nu_LAS.nii.gz
     rm ${outputs_dir_xfm}/nu.nii.gz
 
-    # Convert Freesurfer pial surfaces to GIFTIs
+    # Convert Freesurfer surfaces to GIFTIs
     mris_convert --to-scanner \
         ${SUBJECTS_DIR}/${sub}/surf/lh.pial \
-        ${outputs_dir_surf}/lh.pial.gii
+        ${outputs_dir_surf}/lh.pial.fs.surf.gii
 
     mris_convert --to-scanner \
         ${SUBJECTS_DIR}/${sub}/surf/rh.pial \
-        ${outputs_dir_surf}/rh.pial.gii
+        ${outputs_dir_surf}/rh.pial.fs.surf.gii
+
+    mris_convert --to-scanner \
+        ${SUBJECTS_DIR}/${sub}/surf/lh.white \
+        ${outputs_dir_surf}/lh.white.fs.surf.gii
+
+    mris_convert --to-scanner \
+        ${SUBJECTS_DIR}/${sub}/surf/rh.white \
+        ${outputs_dir_surf}/rh.white.fs.surf.gii
+
+    mris_convert --to-scanner \
+        ${SUBJECTS_DIR}/${sub}/surf/lh.sphere.reg \
+        ${outputs_dir_surf}/lh.sphere.fs.surf.gii
+
+    mris_convert --to-scanner \
+        ${SUBJECTS_DIR}/${sub}/surf/rh.sphere.reg \
+        ${outputs_dir_surf}/rh.sphere.fs.surf.gii
 
     ###############
     # QSIPrep
