@@ -34,19 +34,19 @@ for sub_dir in ${outputs_root}/sub-*; do
         if [ "${hemi}" != "L" ] && [ "${hemi}" != "R" ]; then
             
             # Map tract to surfaces
-            wb_command -volume-to-surface-mapping ${tract_file} ${outputs_root}/${sub}/surfaces/lh.pial.qsiprep.surf.gii ${outputs_dir}/${tract_label}.lh.pial.qsiprep.shape.gii -trilinear
-            wb_command -volume-to-surface-mapping ${tract_file} ${outputs_root}/${sub}/surfaces/rh.pial.qsiprep.surf.gii ${outputs_dir}/${tract_label}.rh.pial.qsiprep.shape.gii -trilinear
+            wb_command -volume-to-surface-mapping ${tract_file} ${outputs_root}/${sub}/surfaces/lh.pial.qsiprep.surf.gii ${outputs_dir}/${tract_label}.lh.shape.gii -trilinear
+            wb_command -volume-to-surface-mapping ${tract_file} ${outputs_root}/${sub}/surfaces/rh.pial.qsiprep.surf.gii ${outputs_dir}/${tract_label}.rh.shape.gii -trilinear
 
         else
 
             # Map tract to the corresponding hemisphere's surface
             if [ "${hemi}" == "L" ]; then
                 
-                wb_command -volume-to-surface-mapping ${tract_file} ${outputs_root}/${sub}/surfaces/lh.pial.qsiprep.surf.gii ${outputs_dir}/${tract_label}.lh.pial.shape.gii -trilinear
+                wb_command -volume-to-surface-mapping ${tract_file} ${outputs_root}/${sub}/surfaces/lh.pial.qsiprep.surf.gii ${outputs_dir}/${tract_label}.lh.shape.gii -trilinear
 
             elif [ "${hemi}" == "R" ]; then
 
-                wb_command -volume-to-surface-mapping ${tract_file} ${outputs_root}/${sub}/surfaces/rh.pial.qsiprep.surf.gii ${outputs_dir}/${tract_label}.rh.pial.shape.gii -trilinear
+                wb_command -volume-to-surface-mapping ${tract_file} ${outputs_root}/${sub}/surfaces/rh.pial.qsiprep.surf.gii ${outputs_dir}/${tract_label}.rh.shape.gii -trilinear
 
             fi
 
