@@ -78,14 +78,6 @@ for sub_dir in ${outputs_root}/sub-*; do
         ${outputs_dir_surf}/rh.pial.fs.surf.gii
 
     mris_convert --to-scanner \
-        ${SUBJECTS_DIR}/${sub}/surf/lh.white \
-        ${outputs_dir_surf}/lh.white.fs.surf.gii
-
-    mris_convert --to-scanner \
-        ${SUBJECTS_DIR}/${sub}/surf/rh.white \
-        ${outputs_dir_surf}/rh.white.fs.surf.gii
-
-    mris_convert --to-scanner \
         ${SUBJECTS_DIR}/${sub}/surf/lh.sphere.reg \
         ${outputs_dir_surf}/lh.sphere.fs.surf.gii
 
