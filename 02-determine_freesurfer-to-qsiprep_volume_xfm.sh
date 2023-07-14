@@ -77,11 +77,11 @@ for sub_dir in ${outputs_root}/sub-*; do
         ${SUBJECTS_DIR}/${sub}/surf/rh.pial \
         ${outputs_dir_surf}/rh.pial.fs.surf.gii
 
-    mris_convert --to-scanner \
+    mris_convert \
         ${SUBJECTS_DIR}/${sub}/surf/lh.sphere.reg \
         ${outputs_dir_surf}/lh.sphere.fs.surf.gii
 
-    mris_convert --to-scanner \
+    mris_convert \
         ${SUBJECTS_DIR}/${sub}/surf/rh.sphere.reg \
         ${outputs_dir_surf}/rh.sphere.fs.surf.gii
 
