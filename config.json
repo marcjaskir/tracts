@@ -1,4 +1,5 @@
 {
 	"data_root": "/cbica/projects/jaskir_tracts/data",
-	"outputs_root": "/cbica/projects/jaskir_tracts/outputs"
+	"outputs_root": "/cbica/projects/jaskir_tracts/outputs",
+	"environment": "/cbica/projects/jaskir_tracts/.conda/envs/tracts"
 }

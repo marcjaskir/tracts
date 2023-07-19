@@ -18,7 +18,7 @@ sub=${1}
 # Check if qsirecon tract (.tck) files exist
 if ! find "${data_root}/qsirecon/${sub}/ses-V1/dwi" -name "*.tck" -print -quit | grep -q .; then
     echo "No tract (.tck) files for ${sub}"
-    continue
+    exit 1
 fi
 
 ########################################
