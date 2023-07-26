@@ -34,10 +34,10 @@ fi
 
 # Create output directories for transforms (including reference volumes) and surfaces converted to GIFTIs
 if [ ! -d ${outputs_root}/${sub}/transforms ]; then
-    mkdir -p ${outputs_root}/${sub}/transforms/freesurfer-to-qsiprep
+    mkdir -p ${outputs_root}/${sub}/transforms/freesurfer-to-native_acpc
     mkdir -p ${outputs_root}/${sub}/surfaces/freesurfer
 fi
-outputs_dir_xfm=${outputs_root}/${sub}/transforms/freesurfer-to-qsiprep
+outputs_dir_xfm=${outputs_root}/${sub}/transforms/freesurfer-to-native_acpc
 outputs_dir_surf=${outputs_root}/${sub}/surfaces/freesurfer
 
 ########################################
@@ -96,7 +96,7 @@ mri_convert --in_type nii \
             --out_type nii \
             --out_orientation LAS+ \
             ${data_root}/qsiprep/${sub}/anat/${sub}_desc-preproc_T1w.nii.gz \
-            ${outputs_dir_xfm}/qsiprep_desc-preproc_T1w.nii.gz
+            ${outputs_dir_xfm}/native_acpc_desc-preproc_T1w.nii.gz
 
 ########################################
 # Warp Freesurfer volume to QSIPrep volume
@@ -104,13 +104,13 @@ mri_convert --in_type nii \
 
 # Compute affine
 flirt -in ${outputs_dir_xfm}/freesurfer_nu.nii.gz \
-    -ref ${outputs_dir_xfm}/qsiprep_desc-preproc_T1w.nii.gz \
-    -out ${outputs_dir_xfm}/qsiprep_nu.nii.gz \
-    -omat ${outputs_dir_xfm}/freesurfer-to-qsiprep_xfm.mat
+    -ref ${outputs_dir_xfm}/native_acpc_desc-preproc_T1w.nii.gz \
+    -out ${outputs_dir_xfm}/native_acpc_nu.nii.gz \
+    -omat ${outputs_dir_xfm}/freesurfer-to-native_acpc_xfm.mat
 
 # Convert affine to lta format
-lta_convert --infsl ${outputs_dir_xfm}/freesurfer-to-qsiprep_xfm.mat \
+lta_convert --infsl ${outputs_dir_xfm}/freesurfer-to-native_acpc_xfm.mat \
             --src ${outputs_dir_xfm}/freesurfer_nu.nii.gz \
-            --trg ${outputs_dir_xfm}/qsiprep_desc-preproc_T1w.nii.gz \
-            --outlta ${outputs_dir_xfm}/freesurfer-to-qsiprep_xfm.lta
-rm ${outputs_dir_xfm}/freesurfer-to-qsiprep_xfm.mat
+            --trg ${outputs_dir_xfm}/native_acpc_desc-preproc_T1w.nii.gz \
+            --outlta ${outputs_dir_xfm}/freesurfer-to-native_acpc_xfm.lta
+rm ${outputs_dir_xfm}/freesurfer-to-native_acpc_xfm.mat

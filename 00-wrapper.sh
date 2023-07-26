@@ -20,7 +20,7 @@ conda activate ${environment}
 # Specify subject ID
 ########################################
 #sub=${1}
-sub='sub-1812044'
+sub='sub-0857566'
 
 ########################################
 # Create log directory
@@ -35,8 +35,8 @@ echo "Running tract-to-surface mapping for ${sub}..."
 echo "-- Voxelizing tracts..."
 ./01-voxelize_tracts.sh ${sub} >> ${outputs_dir_logs}/01-voxelize_tracts.log 2>&1
 
-echo "-- Determining Freesurfer-to-QSIPrep volume transformation..."
-./02-determine_freesurfer-to-qsiprep_volume_xfm.sh ${sub} >> ${outputs_dir_logs}/02-determine_freesurfer-to-qsiprep_volume_xfm.log 2>&1
+echo "-- Determining Freesurfer to Native AC-PC volume transformation..."
+./02-determine_freesurfer-to-native_acpc_volume_xfm.sh ${sub} >> ${outputs_dir_logs}/02-determine_freesurfer-to-native_acpc_volume_xfm.log 2>&1
 
 echo "-- Aligning surfaces with tract volumes..."
 python 03-align_surfaces_with_tract_volumes.py ${sub} >> ${outputs_dir_logs}/03-align_surfaces_with_tract_volumes.log 2>&1

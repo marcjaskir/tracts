@@ -5,6 +5,7 @@
 ########################################
 data_root=$(jq -r '.data_root' config.json)
 outputs_root=$(jq -r '.outputs_root' config.json)
+ants_singularity_img=$(jq -r '.ants_singularity_img' config.json)
 
 ########################################
 # Read in subject ID
@@ -28,7 +29,7 @@ fi
 outputs_dir_cifti=${outputs_root}/${sub}/tracts/cifti
 
 # Iterate over tract volumes
-for tract_file in ${outputs_root}/${sub}/tracts/nifti/native_orientation-LPS/*; do
+for tract_file in ${outputs_root}/${sub}/tracts/nifti/native_acpc_orientation-LPS/*; do
 
     # Extract tract label
     tract_fname=$(basename ${tract_file})
@@ -40,7 +41,7 @@ for tract_file in ${outputs_root}/${sub}/tracts/nifti/native_orientation-LPS/*; 
     # Warp tract volumes to MNI152NLin6Asym
     ########################################
 
-    antsApplyTransforms -d 3 \
+    singularity exec ${ants_singularity_img} antsApplyTransforms -d 3 \
         -i ${tract_file} \
         -o ${outputs_dir_mni}/${tract_label}.nii.gz \
         -r ${data_root}/templates/MNI152NLin6Asym/tpl-MNI152NLin6Asym_res-02_atlas-HCP_dseg.nii \

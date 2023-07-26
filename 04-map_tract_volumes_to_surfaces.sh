@@ -17,11 +17,11 @@ sub=${1}
 
 # Create output directory for surface mappings
 if [ ! -d ${outputs_root}/${sub}/surface_mappings ]; then
-    mkdir -p ${outputs_root}/${sub}/surface_mappings/native
+    mkdir -p ${outputs_root}/${sub}/surface_mappings/native_acpc
     mkdir -p ${outputs_root}/${sub}/surface_mappings/fslr_32k
     mkdir -p ${outputs_root}/${sub}/surface_mappings/fslr_164k
 fi
-outputs_dir_native=${outputs_root}/${sub}/surface_mappings/native
+outputs_dir_native_acpc=${outputs_root}/${sub}/surface_mappings/native_acpc
 outputs_dir_fslr_32k=${outputs_root}/${sub}/surface_mappings/fslr_32k
 outputs_dir_fslr_164k=${outputs_root}/${sub}/surface_mappings/fslr_164k
 
@@ -35,8 +35,8 @@ outputs_dir_fslr_164k=${outputs_root}/${sub}/surface_mappings/fslr_164k
 
 # Left hemisphere
 wb_shortcuts -freesurfer-resample-prep \
-    ${outputs_root}/${sub}/surfaces/qsiprep/lh.white.qsiprep.surf.gii \
-    ${outputs_root}/${sub}/surfaces/qsiprep/lh.pial.qsiprep.surf.gii \
+    ${outputs_root}/${sub}/surfaces/native_acpc/lh.white.native_acpc.surf.gii \
+    ${outputs_root}/${sub}/surfaces/native_acpc/lh.pial.native_acpc.surf.gii \
     ${outputs_root}/${sub}/surfaces/freesurfer/lh.sphere.freesurfer.surf.gii \
     ${data_root}/templates/fslr_32k/fs_LR-deformed_to-fsaverage.L.sphere.32k_fs_LR.surf.gii \
     ${outputs_dir_fslr_32k}/lh.midthickness.surf.gii \
@@ -45,8 +45,8 @@ wb_shortcuts -freesurfer-resample-prep \
 
 # Right hemisphere
 wb_shortcuts -freesurfer-resample-prep \
-    ${outputs_root}/${sub}/surfaces/qsiprep/rh.white.qsiprep.surf.gii \
-    ${outputs_root}/${sub}/surfaces/qsiprep/rh.pial.qsiprep.surf.gii \
+    ${outputs_root}/${sub}/surfaces/native_acpc/rh.white.native_acpc.surf.gii \
+    ${outputs_root}/${sub}/surfaces/native_acpc/rh.pial.native_acpc.surf.gii \
     ${outputs_root}/${sub}/surfaces/freesurfer/rh.sphere.freesurfer.surf.gii \
     ${data_root}/templates/fslr_32k/fs_LR-deformed_to-fsaverage.R.sphere.32k_fs_LR.surf.gii \
     ${outputs_dir_fslr_32k}/rh.midthickness.surf.gii \
@@ -59,8 +59,8 @@ wb_shortcuts -freesurfer-resample-prep \
 
 # Left hemisphere
 wb_shortcuts -freesurfer-resample-prep \
-    ${outputs_root}/${sub}/surfaces/qsiprep/lh.white.qsiprep.surf.gii \
-    ${outputs_root}/${sub}/surfaces/qsiprep/lh.pial.qsiprep.surf.gii \
+    ${outputs_root}/${sub}/surfaces/native_acpc/lh.white.native_acpc.surf.gii \
+    ${outputs_root}/${sub}/surfaces/native_acpc/lh.pial.native_acpc.surf.gii \
     ${outputs_root}/${sub}/surfaces/freesurfer/lh.sphere.freesurfer.surf.gii \
     ${data_root}/templates/fslr_164k/fs_LR-deformed_to-fsaverage.L.sphere.164k_fs_LR.surf.gii \
     ${outputs_dir_fslr_164k}/lh.midthickness.surf.gii \
@@ -69,8 +69,8 @@ wb_shortcuts -freesurfer-resample-prep \
 
 # Right hemisphere
 wb_shortcuts -freesurfer-resample-prep \
-    ${outputs_root}/${sub}/surfaces/qsiprep/rh.white.qsiprep.surf.gii \
-    ${outputs_root}/${sub}/surfaces/qsiprep/rh.pial.qsiprep.surf.gii \
+    ${outputs_root}/${sub}/surfaces/native_acpc/rh.white.native_acpc.surf.gii \
+    ${outputs_root}/${sub}/surfaces/native_acpc/rh.pial.native_acpc.surf.gii \
     ${outputs_root}/${sub}/surfaces/freesurfer/rh.sphere.freesurfer.surf.gii \
     ${data_root}/templates/fslr_164k/fs_LR-deformed_to-fsaverage.R.sphere.164k_fs_LR.surf.gii \
     ${outputs_dir_fslr_164k}/rh.midthickness.surf.gii \
@@ -81,7 +81,7 @@ wb_shortcuts -freesurfer-resample-prep \
 # Map tract volumes to native surfaces
 ########################################
 
-for tract_file in ${outputs_root}/${sub}/tracts/nifti/native_orientation-LAS/*; do
+for tract_file in ${outputs_root}/${sub}/tracts/nifti/native_acpc_orientation-LAS/*; do
 
     # Extract tract label
     tract_fname=$(basename ${tract_file})
@@ -90,13 +90,13 @@ for tract_file in ${outputs_root}/${sub}/tracts/nifti/native_orientation-LAS/*; 
     # Map tract to native surfaces
     wb_command -volume-to-surface-mapping \
         ${tract_file} \
-        ${outputs_root}/${sub}/surfaces/qsiprep/lh.pial.qsiprep.surf.gii \
-        ${outputs_dir_native}/${tract_label}.lh.shape.gii \
+        ${outputs_root}/${sub}/surfaces/native_acpc/lh.pial.native_acpc.surf.gii \
+        ${outputs_dir_native_acpc}/${tract_label}.lh.shape.gii \
         -trilinear
     wb_command -volume-to-surface-mapping \
         ${tract_file} \
-        ${outputs_root}/${sub}/surfaces/qsiprep/rh.pial.qsiprep.surf.gii \
-        ${outputs_dir_native}/${tract_label}.rh.shape.gii \
+        ${outputs_root}/${sub}/surfaces/native_acpc/rh.pial.native_acpc.surf.gii \
+        ${outputs_dir_native_acpc}/${tract_label}.rh.shape.gii \
         -trilinear
 
 done
@@ -105,7 +105,7 @@ done
 # Warp tract surfaces to fsLR
 ########################################
 
-for tract_file in ${outputs_dir_native}/*.shape.gii; do
+for tract_file in ${outputs_dir_native_acpc}/*.shape.gii; do
 
     # Extract tract label
     tract_fname=$(basename ${tract_file})

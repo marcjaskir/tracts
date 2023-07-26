@@ -28,12 +28,12 @@ fi
 # Create output directories for voxelized tracts
 if [ ! -d ${outputs_root}/${sub}/tracts ]; then
     mkdir -p ${outputs_root}/${sub}/tracts/mgz
-    mkdir -p ${outputs_root}/${sub}/tracts/nifti/native_orientation-LPS
-    mkdir -p ${outputs_root}/${sub}/tracts/nifti/native_orientation-LAS
+    mkdir -p ${outputs_root}/${sub}/tracts/nifti/native_acpc_orientation-LPS
+    mkdir -p ${outputs_root}/${sub}/tracts/nifti/native_acpc_orientation-LAS
 fi
 outputs_dir_mgz=${outputs_root}/${sub}/tracts/mgz
-outputs_dir_nifti_LPS=${outputs_root}/${sub}/tracts/nifti/native_orientation-LPS
-outputs_dir_nifti_LAS=${outputs_root}/${sub}/tracts/nifti/native_orientation-LAS
+outputs_dir_nifti_LPS=${outputs_root}/${sub}/tracts/nifti/native_acpc_orientation-LPS
+outputs_dir_nifti_LAS=${outputs_root}/${sub}/tracts/nifti/native_acpc_orientation-LAS
 
 ########################################
 # Voxelize tracts

@@ -33,7 +33,7 @@ if len(white_files) != 2:
     exit(1)
 
 # Check for .lta transformation file
-lta_files = [ospj(outputs_root, sub, 'transforms', 'freesurfer-to-qsiprep', f) for f in os.listdir(ospj(outputs_root, sub, 'transforms', 'freesurfer-to-qsiprep')) if f.endswith('.lta')]
+lta_files = [ospj(outputs_root, sub, 'transforms', 'freesurfer-to-native_acpc', f) for f in os.listdir(ospj(outputs_root, sub, 'transforms', 'freesurfer-to-native_acpc')) if f.endswith('.lta')]
 if len(lta_files) != 1:
     print('Missing .lta transformation file for %s' % sub)
     exit(1)
@@ -43,12 +43,12 @@ if len(lta_files) != 1:
 ########################################
 
 # Create directory for transformed surfaces (into QSIPrep space)
-if not os.path.exists(ospj(outputs_root, sub, 'surfaces', 'qsiprep')):
-    os.makedirs(ospj(outputs_root, sub, 'surfaces', 'qsiprep'))
-outputs_dir = ospj(outputs_root, sub, 'surfaces', 'qsiprep')
+if not os.path.exists(ospj(outputs_root, sub, 'surfaces', 'native_acpc')):
+    os.makedirs(ospj(outputs_root, sub, 'surfaces', 'native_acpc'))
+outputs_dir = ospj(outputs_root, sub, 'surfaces', 'native_acpc')
 
 ########################################
-# Apply Freesurfer to QSIPrep volume transformation to surfaces
+# Apply Freesurfer to native AC-PC volume transformation to surfaces
 ########################################
 
 print('Transforming pial surfaces...')
@@ -63,7 +63,7 @@ for pial_file in pial_files:
     converted_surf = normalize_surfs(pial_file, lta_files[0], pial_file)
 
     # Move the converted surface to the same directory as the original surface
-    os.rename(converted_surf, ospj(outputs_dir, '%s.pial.qsiprep.surf.gii' % hemi))
+    os.rename(converted_surf, ospj(outputs_dir, '%s.pial.native_acpc.surf.gii' % hemi))
 
 print('Transforming white surfaces...')
 
@@ -77,4 +77,4 @@ for white_file in white_files:
     converted_surf = normalize_surfs(white_file, lta_files[0], white_file)
 
     # Move the converted surface to the same directory as the original surface
-    os.rename(converted_surf, ospj(outputs_dir, '%s.white.qsiprep.surf.gii' % hemi))
+    os.rename(converted_surf, ospj(outputs_dir, '%s.white.native_acpc.surf.gii' % hemi))
