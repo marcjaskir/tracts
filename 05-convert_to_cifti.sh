@@ -23,17 +23,17 @@ fi
 outputs_dir_mni=${outputs_root}/${sub}/tracts/nifti/MNI152NLin6Asym
 
 # Create output directory for CIFTIs
-if [ ! -d ${outputs_root}/${sub}/tracts/cifti ]; then
-    mkdir -p ${outputs_root}/${sub}/tracts/cifti
+if [ ! -d ${outputs_root}/${sub}/tracts/cifti/density ]; then
+    mkdir -p ${outputs_root}/${sub}/tracts/cifti/density
 fi
-outputs_dir_cifti=${outputs_root}/${sub}/tracts/cifti
+outputs_dir_cifti=${outputs_root}/${sub}/tracts/cifti/density
 
 # Iterate over tract volumes
 for tract_file in ${outputs_root}/${sub}/tracts/nifti/native_acpc_orientation-LPS/*; do
 
     # Extract tract label
     tract_fname=$(basename ${tract_file})
-    tract_label=$(echo ${tract_fname} | sed 's/_LPS.nii.gz//g')
+    tract_label=$(echo ${tract_fname} | cut -d'.' -f2)
 
     echo "Converting ${tract_label} volume/surface data to CIFTI"
 
@@ -43,7 +43,7 @@ for tract_file in ${outputs_root}/${sub}/tracts/nifti/native_acpc_orientation-LP
 
     singularity exec ${ants_singularity_img} antsApplyTransforms -d 3 \
         -i ${tract_file} \
-        -o ${outputs_dir_mni}/${tract_label}.nii.gz \
+        -o ${outputs_dir_mni}/${sub}.${tract_label}.nii.gz \
         -r ${data_root}/templates/MNI152NLin6Asym/tpl-MNI152NLin6Asym_res-02_atlas-HCP_dseg.nii \
         -t ${data_root}/templates/transforms/tpl-MNI152NLin6Asym_from-MNI152NLin2009cAsym_mode-image_xfm.h5 \
         -t ${data_root}/qsiprep/${sub}/anat/${sub}_from-T1w_to-MNI152NLin2009cAsym_mode-image_xfm.h5 \
@@ -54,10 +54,10 @@ for tract_file in ${outputs_root}/${sub}/tracts/nifti/native_acpc_orientation-LP
     ########################################
 
     wb_command -cifti-create-dense-scalar \
-        ${outputs_dir_cifti}/${tract_label}.dscalar.nii \
-        -volume ${outputs_dir_mni}/${tract_label}.nii.gz \
+        ${outputs_dir_cifti}/${sub}.${tract_label}.density.dscalar.nii \
+        -volume ${outputs_dir_mni}/${sub}.${tract_label}.nii.gz \
         ${data_root}/templates/MNI152NLin6Asym/tpl-MNI152NLin6Asym_res-02_atlas-HCP_dseg.nii \
-        -left-metric ${outputs_root}/${sub}/surface_mappings/fslr_164k/${tract_label}.lh.shape.gii \
-        -right-metric ${outputs_root}/${sub}/surface_mappings/fslr_164k/${tract_label}.rh.shape.gii
+        -left-metric ${outputs_root}/${sub}/surface_mappings/fslr_164k/${sub}.${tract_label}.lh.shape.gii \
+        -right-metric ${outputs_root}/${sub}/surface_mappings/fslr_164k/${sub}.${tract_label}.rh.shape.gii
 
 done

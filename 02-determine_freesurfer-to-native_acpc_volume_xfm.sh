@@ -52,40 +52,40 @@ outputs_dir_surf=${outputs_root}/${sub}/surfaces/freesurfer
 mri_convert --in_type mgz \
             --out_type nii \
             ${SUBJECTS_DIR}/${sub}/mri/nu.mgz \
-            ${outputs_dir_xfm}/freesurfer_nu_LIA.nii.gz
+            ${outputs_dir_xfm}/${sub}.freesurfer.nu.LIA.nii.gz
 
 # Change orientation of Freesurfer reference volumes to LAS+
 mri_convert --in_type nii \
             --out_type nii \
             --out_orientation LAS+ \
-            ${outputs_dir_xfm}/freesurfer_nu_LIA.nii.gz \
-            ${outputs_dir_xfm}/freesurfer_nu.nii.gz
-rm ${outputs_dir_xfm}/freesurfer_nu_LIA.nii.gz
+            ${outputs_dir_xfm}/${sub}.freesurfer.nu.LIA.nii.gz \
+            ${outputs_dir_xfm}/${sub}.freesurfer.nu.nii.gz
+rm ${outputs_dir_xfm}/${sub}.freesurfer.nu.LIA.nii.gz
 
 # Convert Freesurfer surfaces to GIFTIs
 mris_convert --to-scanner \
     ${SUBJECTS_DIR}/${sub}/surf/lh.pial \
-    ${outputs_dir_surf}/lh.pial.freesurfer.surf.gii
+    ${outputs_dir_surf}/${sub}.lh.pial.freesurfer.surf.gii
 
 mris_convert --to-scanner \
     ${SUBJECTS_DIR}/${sub}/surf/rh.pial \
-    ${outputs_dir_surf}/rh.pial.freesurfer.surf.gii
+    ${outputs_dir_surf}/${sub}.rh.pial.freesurfer.surf.gii
 
 mris_convert --to-scanner \
     ${SUBJECTS_DIR}/${sub}/surf/lh.white \
-    ${outputs_dir_surf}/lh.white.freesurfer.surf.gii
+    ${outputs_dir_surf}/${sub}.lh.white.freesurfer.surf.gii
 
 mris_convert --to-scanner \
     ${SUBJECTS_DIR}/${sub}/surf/rh.white \
-    ${outputs_dir_surf}/rh.white.freesurfer.surf.gii
+    ${outputs_dir_surf}/${sub}.rh.white.freesurfer.surf.gii
 
 mris_convert \
     ${SUBJECTS_DIR}/${sub}/surf/lh.sphere.reg \
-    ${outputs_dir_surf}/lh.sphere.freesurfer.surf.gii
+    ${outputs_dir_surf}/${sub}.lh.sphere.freesurfer.surf.gii
 
 mris_convert \
     ${SUBJECTS_DIR}/${sub}/surf/rh.sphere.reg \
-    ${outputs_dir_surf}/rh.sphere.freesurfer.surf.gii
+    ${outputs_dir_surf}/${sub}.rh.sphere.freesurfer.surf.gii
 
 ###############
 # QSIPrep
@@ -96,21 +96,21 @@ mri_convert --in_type nii \
             --out_type nii \
             --out_orientation LAS+ \
             ${data_root}/qsiprep/${sub}/anat/${sub}_desc-preproc_T1w.nii.gz \
-            ${outputs_dir_xfm}/native_acpc_desc-preproc_T1w.nii.gz
+            ${outputs_dir_xfm}/${sub}.native_acpc.desc-preproc_T1w.nii.gz
 
 ########################################
 # Warp Freesurfer volume to QSIPrep volume
 ########################################
 
 # Compute affine
-flirt -in ${outputs_dir_xfm}/freesurfer_nu.nii.gz \
-    -ref ${outputs_dir_xfm}/native_acpc_desc-preproc_T1w.nii.gz \
-    -out ${outputs_dir_xfm}/native_acpc_nu.nii.gz \
-    -omat ${outputs_dir_xfm}/freesurfer-to-native_acpc_xfm.mat
+flirt -in ${outputs_dir_xfm}/${sub}.freesurfer.nu.nii.gz \
+    -ref ${outputs_dir_xfm}/${sub}.native_acpc.desc-preproc_T1w.nii.gz \
+    -out ${outputs_dir_xfm}/${sub}.native_acpc.nu.nii.gz \
+    -omat ${outputs_dir_xfm}/${sub}.freesurfer-to-native_acpc.xfm.mat
 
 # Convert affine to lta format
-lta_convert --infsl ${outputs_dir_xfm}/freesurfer-to-native_acpc_xfm.mat \
-            --src ${outputs_dir_xfm}/freesurfer_nu.nii.gz \
-            --trg ${outputs_dir_xfm}/native_acpc_desc-preproc_T1w.nii.gz \
-            --outlta ${outputs_dir_xfm}/freesurfer-to-native_acpc_xfm.lta
-rm ${outputs_dir_xfm}/freesurfer-to-native_acpc_xfm.mat
+lta_convert --infsl ${outputs_dir_xfm}/${sub}.freesurfer-to-native_acpc.xfm.mat \
+            --src ${outputs_dir_xfm}/${sub}.freesurfer.nu.nii.gz \
+            --trg ${outputs_dir_xfm}/${sub}.native_acpc.desc-preproc_T1w.nii.gz \
+            --outlta ${outputs_dir_xfm}/${sub}.freesurfer-to-native_acpc.xfm.lta
+rm ${outputs_dir_xfm}/${sub}.freesurfer-to-native_acpc.xfm.mat

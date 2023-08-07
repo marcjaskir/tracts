@@ -12,7 +12,7 @@ with open('config.json', "rb") as f:
 outputs_root = config['outputs_root']
 
 ########################################
-# Check for required files
+# Read in subject ID as argument
 ########################################
 sub = sys.argv[1]
 
@@ -57,13 +57,13 @@ print('Transforming pial surfaces...')
 for pial_file in pial_files:
 
     # Get hemisphere
-    hemi = pial_file.split('/')[-1].split('.')[0]
+    hemi = pial_file.split('/')[-1].split('.')[1]
 
     # Apply transformation
     converted_surf = normalize_surfs(pial_file, lta_files[0], pial_file)
 
     # Move the converted surface to the same directory as the original surface
-    os.rename(converted_surf, ospj(outputs_dir, '%s.pial.native_acpc.surf.gii' % hemi))
+    os.rename(converted_surf, ospj(outputs_dir, f"{sub}.{hemi}.pial.native_acpc.surf.gii"))
 
 print('Transforming white surfaces...')
 
@@ -71,10 +71,10 @@ print('Transforming white surfaces...')
 for white_file in white_files:
 
     # Get hemisphere
-    hemi = white_file.split('/')[-1].split('.')[0]
+    hemi = white_file.split('/')[-1].split('.')[1]
 
     # Apply transformation
     converted_surf = normalize_surfs(white_file, lta_files[0], white_file)
 
     # Move the converted surface to the same directory as the original surface
-    os.rename(converted_surf, ospj(outputs_dir, '%s.white.native_acpc.surf.gii' % hemi))
+    os.rename(converted_surf, ospj(outputs_dir, f"{sub}.{hemi}.white.native_acpc.surf.gii"))
