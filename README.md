@@ -8,9 +8,9 @@ qsiprep + qsirecon
 Freesurfer
 
 ## Dependencies
-MRTrix3
-Freesurfer
-FSL
-smriprep
-Connectome Workbench
-ANTS
+* MRTrix3
+* Freesurfer
+* FSL
+* smriprep
+* Connectome Workbench
+* ANTS
