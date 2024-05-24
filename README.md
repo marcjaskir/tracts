@@ -3,9 +3,9 @@
 ## Faculty Lead
 Theodore Satterthwaite
 
-## Input data
-qsiprep + qsirecon
-Freesurfer
+## Input data (BIDS derivatives)
+* qsiprep + qsirecon
+* Freesurfer
 
 ## Dependencies
 * MRTrix3
