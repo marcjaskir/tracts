@@ -1,5 +1,7 @@
 # tracts
 
+This code facilitates the mapping of tract segmentations to cortical surface reconstructions.
+
 ## Faculty Lead
 Theodore Satterthwaite
 
